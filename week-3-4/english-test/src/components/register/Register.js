@@ -9,6 +9,7 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "../../util/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const [values, setValues] = useState({
@@ -21,6 +22,7 @@ export const Register = () => {
   const [errors, setErrors] = useState({});
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const togglePassword = () => {
     setVisible(!visible);
@@ -78,6 +80,7 @@ export const Register = () => {
     ) {
       errs.password = "*Password should be 6-20 characters.";
     }
+    setErrors(errs);
     if (
       errs.firstName == undefined &&
       errs.lastName == undefined &&
@@ -97,6 +100,10 @@ export const Register = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const handleNavigate = () => {
+    navigate("/login");
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm(values)) {
@@ -115,7 +122,7 @@ export const Register = () => {
           console.log(err);
           setLoading(false);
         });
-    }
+    } 
   };
 
   return (
@@ -185,6 +192,7 @@ export const Register = () => {
                 {errors.password && <span>{errors.password}</span>}
               </div>
               <button type="submit">Register</button>
+              <p className="navigate">Already have an account? <span onClick={handleNavigate}>Sign in</span></p>
             </form>
           </div>
         </div>
