@@ -82,11 +82,11 @@ export const Register = () => {
     }
     setErrors(errs);
     if (
-      errs.firstName == undefined &&
-      errs.lastName == undefined &&
-      errs.email == undefined &&
-      errs.password == undefined &&
-      errs.username == undefined
+      errs.firstName === undefined &&
+      errs.lastName === undefined &&
+      errs.email === undefined &&
+      errs.password === undefined &&
+      errs.username === undefined
     ) {
       console.log("valid");
       return true;
@@ -113,7 +113,7 @@ export const Register = () => {
         .then((res) => {
           // success
           setLoading(false);
-          if (res.data.code == "200") {
+          if (res.data.code === 200) {
             console.log(res.data);
           }
         })
@@ -128,11 +128,12 @@ export const Register = () => {
   return (
     <div>
       <div className="container">
-        <div className="row register-content">
-          <div className="register-img col-6">
+        <div className="row register-content justify-content-center">
+          <div></div>
+          <div className="register-img col-xl-6 ">
             <img src="../../../images/login-3.gif" className="" />
           </div>
-          <div className="register-form col-6">
+          <div className="register-form col-xl-6  col-lg-6 ">
             <h2>Sign up</h2>
             <form className="" onSubmit={handleSubmit}>
               <div className="form-input">

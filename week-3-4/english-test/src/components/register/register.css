@@ -1,5 +1,5 @@
 .register-content {
-  background-color: #fff;
+  background-color: transparent;
   box-shadow: 0px 0px 20px 15px #dddddd6b;
   height: max-content;
 
@@ -18,12 +18,12 @@
   background: #111111;
   padding: 30px;
 }
-.form-input {
+/* .form-input {
   margin-bottom: 5px;
-}
+} */
 .form-input input[type="text"],
 .form-input input[type="password"] {
-  background-color: transparent;
+  background-color: #111111;
   border: none;
   border-bottom: 1px solid #333333;
   font-size: 16px;
@@ -53,7 +53,7 @@
   border-radius: 5px;
   background-color: #238636;
   color: #fff;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 .register-form h2 {
   margin-bottom: 20px;
@@ -83,3 +83,14 @@
 .navigate span:hover {
   color: green;
 }
+
+/* `lg` applies to medium devices (tablets, less than 992px) */
+@media (max-width: 1199.98px) { 
+  .register-img{
+    display:none;
+  }
+  .register-content{
+    box-shadow: none;
+
+  }
+ }

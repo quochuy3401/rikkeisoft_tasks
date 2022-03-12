@@ -4,8 +4,9 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
 
 import "../register/register.css";
@@ -19,11 +20,13 @@ export const Login = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const userCtx = useContext(UserContext);
   const navigate = useNavigate();
 
-  // check if username is stored in local storage
+  // check if username is stored in localStorage
   useEffect(() => {
     const _username = localStorage.getItem("username");
+
     if (_username) {
       setValues({ ...values, username: _username });
     }
@@ -41,24 +44,26 @@ export const Login = () => {
     };
     if (!data.username.trim()) {
       errs.username = "*Required";
-    } else if (
-      !/^[A-Za-z0-9 ]+$/.test(data.username) ||
-      data.username.trim().length < 5 ||
-      data.username.trim().length > 20
-    ) {
-      errs.username =
-        "*Username should be 5-20 characters and not contain special characters";
     }
+    // else if (
+    //   !/^[A-Za-z0-9 ]+$/.test(data.username) ||
+    //   data.username.trim().length < 5 ||
+    //   data.username.trim().length > 20
+    // ) {
+    //   errs.username =
+    //     "*Username should be 5-20 characters and not contain special characters";
+    // }
     if (!data.password.trim()) {
       errs.password = "*Required";
-    } else if (
-      data.password.trim().length < 6 ||
-      data.password.trim().length > 20
-    ) {
-      errs.password = "*Password should be 6-20 characters.";
     }
+    //  else if (
+    //   data.password.trim().length < 6 ||
+    //   data.password.trim().length > 20
+    // ) {
+    //   errs.password = "*Password should be 6-20 characters.";
+    // }
     setErrors(errs);
-    if (errs.password == undefined && errs.username == undefined) {
+    if (errs.password === undefined && errs.username === undefined) {
       console.log("valid");
       return true;
     } else {
@@ -94,31 +99,38 @@ export const Login = () => {
         .post("/users/authenticate", values)
         .then((res) => {
           // success
-          setLoading(false);
-          if (res.data.code == "200") {
-            console.log(res.data.data.username);
+          if (res.data.code === 200) {
+            console.log(res.data.data);
+            // store username in localStorage
             if (isChecked) {
               console.log(isChecked);
               localStorage.setItem("username", res.data.data.username);
             }
-            navigate("/home");
+
+            localStorage.setItem("userinfo", JSON.stringify(res.data.data));
+            userCtx.setUser(JSON.stringify(res.data.data));
+            setLoading(false);
+            navigate("/");
           }
         })
         .catch((err) => {
           // errors
-          console.log(err);
           setLoading(false);
+          console.log(err.response);
+          if (err.response.status === 400) {
+            alert("username or password is incorrect.");
+          }
         });
     }
   };
   return (
     <div>
       <div className="container">
-        <div className="row register-content">
-          <div className="register-img col-6">
+        <div className="row register-content justify-content-center">
+          <div className="register-img col-xl-6">
             <img src="../../../images/login-3.gif" className="" />
           </div>
-          <div className="register-form col-6">
+          <div className="register-form col-xl-6  col-lg-6">
             <h2>Sign in</h2>
             <form className="" onSubmit={handleSubmit}>
               <div className="form-input">
@@ -147,7 +159,7 @@ export const Login = () => {
 
                 {errors.password && <span>{errors.password}</span>}
               </div>
-              <div className="form-input d-flex ">
+              <div className="form-input d-flex align-items-center">
                 <input
                   type="checkbox"
                   id="rememberCheckbox"
