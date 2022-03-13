@@ -4,11 +4,12 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import React, { useContext, useEffect, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
-
 import "../register/register.css";
 
 export const Login = () => {
@@ -20,6 +21,9 @@ export const Login = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [show, setShow] = useState(false);
+  const [modalBody, setModalBody] = useState("");
+
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -32,38 +36,23 @@ export const Login = () => {
     }
   }, []);
 
-  // toggle to set visibility of password
   const togglePassword = () => {
     setVisible(!visible);
   };
 
   const validateForm = (data) => {
     let errs = {
-      username: undefined,
-      password: undefined,
+      username: null,
+      password: null,
     };
     if (!data.username.trim()) {
       errs.username = "*Required";
     }
-    // else if (
-    //   !/^[A-Za-z0-9 ]+$/.test(data.username) ||
-    //   data.username.trim().length < 5 ||
-    //   data.username.trim().length > 20
-    // ) {
-    //   errs.username =
-    //     "*Username should be 5-20 characters and not contain special characters";
-    // }
     if (!data.password.trim()) {
       errs.password = "*Required";
     }
-    //  else if (
-    //   data.password.trim().length < 6 ||
-    //   data.password.trim().length > 20
-    // ) {
-    //   errs.password = "*Password should be 6-20 characters.";
-    // }
     setErrors(errs);
-    if (errs.password === undefined && errs.username === undefined) {
+    if (errs.password === null && errs.username === null) {
       console.log("valid");
       return true;
     } else {
@@ -77,7 +66,7 @@ export const Login = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  // handle remember password
+  // remember me
   const handleOnClick = (e) => {
     const checked = e.target.checked;
     if (checked) {
@@ -101,7 +90,7 @@ export const Login = () => {
           // success
           if (res.data.code === 200) {
             console.log(res.data.data);
-            // store username in localStorage
+            // store username in localStorage if remember me is checked
             if (isChecked) {
               console.log(isChecked);
               localStorage.setItem("username", res.data.data.username);
@@ -116,19 +105,24 @@ export const Login = () => {
         .catch((err) => {
           // errors
           setLoading(false);
-          console.log(err.response);
+          console.log(err.response.data);
           if (err.response.status === 400) {
-            alert("username or password is incorrect.");
+            setModalBody(err.response.data.message)
+            setShow(true)
           }
         });
     }
   };
+
+  // handle modal
+  const handleClose = () => setShow(false);
+
   return (
-    <div>
+    <div className="register-login-page">
       <div className="container">
         <div className="row register-content justify-content-center">
           <div className="register-img col-xl-6">
-            <img src="../../../images/login-3.gif" className="" />
+            <img src="../../../images/login-3.gif" alt="image" />
           </div>
           <div className="register-form col-xl-6  col-lg-6">
             <h2>Sign in</h2>
@@ -176,6 +170,19 @@ export const Login = () => {
           </div>
         </div>
       </div>
+      {/* Modal */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ color: "black" }}>Notification</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ color: "black" }}>{modalBody}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* spin loading */}
       {loading ? (
         <div className="loading-layout">
           <FontAwesomeIcon icon={faSpinner} spin size="2x" />

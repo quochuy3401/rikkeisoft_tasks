@@ -6,8 +6,7 @@ import { Login } from "./components/login/Login";
 import { Home } from "./components/home/Home";
 import { UserContext } from "../src/context/user";
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 
 function App() {
   const [user, setUser] = useState(null);

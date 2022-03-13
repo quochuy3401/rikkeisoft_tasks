@@ -10,16 +10,22 @@ background-repeat: no-repeat;
 background-size: cover; */
 background: #010409;
 }
+button {
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #238636;
+}
 @media (min-width: 1400px) {
   .container {
     max-width: 1140px !important;
   }
 }
-.App{
+/* .App{
   min-height: 100vh;
   position: relative;
   padding: 70px;
-}
+} */
 .loading-layout{
   position: absolute;
   width: 100%;

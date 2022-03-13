@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./register.css";
@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "../../util/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
 
 export const Register = () => {
   const [values, setValues] = useState({
@@ -22,6 +23,9 @@ export const Register = () => {
   const [errors, setErrors] = useState({});
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [modalBody, setModalBody] = useState("");
+  const [show, setShow] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
   const navigate = useNavigate();
 
   const togglePassword = () => {
@@ -29,11 +33,11 @@ export const Register = () => {
   };
   const validateForm = (data) => {
     let errs = {
-      firstName: undefined,
-      lastName: undefined,
-      email: undefined,
-      username: undefined,
-      password: undefined,
+      firstName: null,
+      lastName: null,
+      email: null,
+      username: null,
+      password: null,
     };
     if (!data.firstName.trim()) {
       errs.firstName = "*Required";
@@ -82,11 +86,11 @@ export const Register = () => {
     }
     setErrors(errs);
     if (
-      errs.firstName === undefined &&
-      errs.lastName === undefined &&
-      errs.email === undefined &&
-      errs.password === undefined &&
-      errs.username === undefined
+      errs.firstName === null &&
+      errs.lastName === null &&
+      errs.email === null &&
+      errs.password === null &&
+      errs.username === null
     ) {
       console.log("valid");
       return true;
@@ -102,7 +106,7 @@ export const Register = () => {
 
   const handleNavigate = () => {
     navigate("/login");
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -115,23 +119,36 @@ export const Register = () => {
           setLoading(false);
           if (res.data.code === 200) {
             console.log(res.data);
+            setIsSuccessful(true);
+            setModalBody(res.data.message);
+            setShow(true);
           }
         })
         .catch((err) => {
           // errors
           console.log(err);
           setLoading(false);
+          setModalBody("Registration failed!");
+          setShow(true);
         });
-    } 
+    }
+  };
+
+  // handle modal
+  const handleClose = () => {
+    setShow(false);
+    if (isSuccessful) {
+      navigate("/login");
+    }
   };
 
   return (
-    <div>
-      <div className="container">
+    <div className="register-login-page">
+      <div className="container ">
         <div className="row register-content justify-content-center">
           <div></div>
           <div className="register-img col-xl-6 ">
-            <img src="../../../images/login-3.gif" className="" />
+            <img src="../../../images/login-3.gif" alt="image" />
           </div>
           <div className="register-form col-xl-6  col-lg-6 ">
             <h2>Sign up</h2>
@@ -193,11 +210,26 @@ export const Register = () => {
                 {errors.password && <span>{errors.password}</span>}
               </div>
               <button type="submit">Register</button>
-              <p className="navigate">Already have an account? <span onClick={handleNavigate}>Sign in</span></p>
+              <p className="navigate">
+                Already have an account?{" "}
+                <span onClick={handleNavigate}>Sign in</span>
+              </p>
             </form>
           </div>
         </div>
       </div>
+      {/* Modal */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ color: "black" }}>Notification</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ color: "black" }}>{modalBody}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {loading ? (
         <div className="loading-layout">
           <FontAwesomeIcon icon={faSpinner} spin size="2x" />
