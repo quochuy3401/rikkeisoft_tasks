@@ -15,12 +15,12 @@ function App() {
   useEffect(() => {
     const userinfo = localStorage.getItem("userinfo");
     console.log(userinfo);
-    if (!userinfo) {
+    if (!userinfo) { //fix cho nay
       setSigningIn(false);
       navigate("/login");
     } else {
       setSigningIn(false);
-      setUser(userinfo);
+      setUser(JSON.parse(userinfo));
       navigate("/");
     }
   }, []);

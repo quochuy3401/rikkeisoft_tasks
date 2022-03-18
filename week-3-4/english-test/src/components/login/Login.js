@@ -97,7 +97,8 @@ export const Login = () => {
             }
 
             localStorage.setItem("userinfo", JSON.stringify(res.data.data));
-            userCtx.setUser(JSON.stringify(res.data.data));
+            userCtx.setUser(res.data.data); 
+            // JSON.stringify(res.data.data)
             setLoading(false);
             navigate("/");
           }
