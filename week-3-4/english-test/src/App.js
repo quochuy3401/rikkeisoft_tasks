@@ -14,7 +14,7 @@ function App() {
   const navigate = useNavigate();
   useEffect(() => {
     const userinfo = localStorage.getItem("userinfo");
-    console.log(userinfo);
+    // console.log(userinfo);
     if (!userinfo) { //fix cho nay
       setSigningIn(false);
       navigate("/login");
