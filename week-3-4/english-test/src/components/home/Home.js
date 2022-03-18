@@ -1,15 +1,31 @@
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faRightFromBracket,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
 import "./home.css";
+import "../register/register.css";
+
 import { Question } from "../question/Question";
 
 export const Home = () => {
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+  const [examParams, setExamParams] = useState({
+    totalPoint: 0,
+    totalTime: 0,
+    quantity: 0,
+  });
+  const [start, setStart] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [listQuestion, setListQuestion] = useState([]);
+  const [listAnswer, setListAnswer] = useState([]);
+  const _userId = userCtx.user.id.toString();
+  const token = userCtx.user.token;
 
   //remove userinfo in localStorage and UserContext
   const handleLogOut = () => {
@@ -18,38 +34,15 @@ export const Home = () => {
     navigate("/login");
   };
 
-  const questionList = [
-    {
-      id: 12,
-      questionTitle:
-        "Giai đoạn thứ hai của cuộc cách mạng khoa học – kĩ thuật hiện đại có điểm gì khác biệt so với giai đoạn thứ nhất?",
-      answers: [
-        "Khoa học đi trước mở đường cho kĩ thuật phát triển.",
-        "Mọi phát minh kĩ thuật đều bắt nguồn từ nghiên cứu khoa học.",
-        "Khoa học trở thành lực lượng sản xuất trực tiếp.",
-        "Công nghệ trở thành cốt lõi của cách mạng.",
-      ],
-    },
-    {
-      id: 13,
-      questionTitle:
-        "Quốc gia khởi đầu cuộc cách mạng khoa học – kĩ thuật hiện đại là",
-      answers: ["Anh.", "Pháp.", "Mỹ.", "Liên Xô."],
-    },
-  ];
-
-  const answerList = [];
-
   //get game
-  const handleGetGame = () => {
-    const _userId = userCtx.user.id.toString();
-    const token = userCtx.user.token 
-    console.log(_userId);
-    console.log(token);
+  const handleStart = () => {
+    // console.log(_userId);
+    // console.log(token);
+    setLoading(true);
     axiosInstance
       .post(
         "/games/getGame",
-         {
+        {
           examId: 24,
           userId: _userId,
         },
@@ -60,12 +53,52 @@ export const Home = () => {
         }
       )
       .then((res) => {
-        console.log(res);
+        setLoading(false);
+        setExamParams({
+          totalPoint: res.data.totalPoint,
+          totalTime: res.data.totalTime,
+          quantity: res.data.data.length,
+        });
+        setStart(true);
+        setListQuestion(res.data.data);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
       });
   };
+
+  const handleSubmit = () => {
+    console.log(listAnswer);
+    setLoading(true);
+    axiosInstance
+      .post(
+        "/games/finishGame",
+        {
+          examId: 24,
+          userId: _userId,
+          listAnswer: listAnswer,
+          totalTime: examParams.totalTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
   return (
     <div className="home-page">
-      <div className="navbar">
+      <div className="info-navbar">
         <div className="container">
           <div>
             Your id: <span>{userCtx.user.id}</span>
@@ -80,18 +113,35 @@ export const Home = () => {
       <div className="container test-wrapper">
         <div className="row">
           <div className="left-side col-3">
-            <button type="button" onClick={handleGetGame}>
-              Start
-            </button>
+            {!start ? (
+              <button type="button" onClick={handleStart}>
+                Start
+              </button>
+            ) : (
+              <button type="button" onClick={handleSubmit}>
+                Submit
+              </button>
+            )}
           </div>
           <div className="right-side col-9">
-            {questionList.map((question, index) => {
-              return <Question key={index} ques={question} />;
+            {listQuestion.map((question) => {
+              return (
+                <Question
+                  key={question.id}
+                  question={question}
+                  handleChange={[listAnswer, setListAnswer]}
+                />
+              );
             })}
-            {/* <Question ques={fakeQuestion} /> */}
           </div>
         </div>
       </div>
+      {/* spin loading */}
+      {loading ? (
+        <div className="loading-layout">
+          <FontAwesomeIcon icon={faSpinner} spin size="2x" />
+        </div>
+      ) : null}
     </div>
   );
 };

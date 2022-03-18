@@ -2,17 +2,30 @@
     background-color: none;
     color: black
 } */
-.home-page{
-    height: max-content;
+.home-page {
+  min-height: 100vh;
+  position: relative;
+  align-items: center;
 }
-.navbar{
-    height: 60px;
-    box-shadow: 0px 0px 20px
+.info-navbar {
+  height: max-content;
+  box-shadow: 0px 0px 20px;
+  /* position: fixed; */
+  width: 100%;
 }
-.left-side{
-    border-right: 1px solid #333;
-    min-height: 100vh;
+.info-navbar .container {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  justify-content: flex-end;
 }
-.test-wrapper{
-    /* background: #fff !important; */
+.info-navbar .container button {
+  margin-left: 20px;
+}
+.left-side {
+  border-right: 1px solid #333;
+  min-height: 100vh;
+}
+.test-wrapper {
+  /* background: #fff !important; */
 }
