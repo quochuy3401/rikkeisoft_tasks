@@ -67,9 +67,8 @@
 }
 
 .loading-layout {
+  height: 100vh;
   position: absolute;
-  justify-content: center;
-  align-items: center;
   top: 0;
   left: 0;
   color: black;

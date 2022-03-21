@@ -29,3 +29,22 @@
 .test-wrapper {
   /* background: #fff !important; */
 }
+.list-button {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.list-button .answer-button {
+  border: 1px solid black;
+  width: 50px;
+  height: 30px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.list-button .answer-button:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}

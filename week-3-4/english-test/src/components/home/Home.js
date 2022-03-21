@@ -24,6 +24,7 @@ export const Home = () => {
   const [loading, setLoading] = useState(false);
   const [listQuestion, setListQuestion] = useState([]);
   const [listAnswer, setListAnswer] = useState([]);
+  const [listAnswerButton, setListAnswerButton] = useState([]);
   const _userId = userCtx.user.id.toString();
   const token = userCtx.user.token;
 
@@ -32,6 +33,11 @@ export const Home = () => {
     localStorage.removeItem("userinfo");
     userCtx.setUser(null);
     navigate("/login");
+  };
+
+  const scrollToQuestion = (id) => {
+    const element = document.getElementById(id);
+    element.scrollIntoView({ behavior: "smooth" });
   };
 
   //get game
@@ -54,13 +60,19 @@ export const Home = () => {
       )
       .then((res) => {
         setLoading(false);
+        const data = res.data.data;
         setExamParams({
           totalPoint: res.data.totalPoint,
           totalTime: res.data.totalTime,
-          quantity: res.data.data.length,
+          quantity: data.length,
         });
         setStart(true);
-        setListQuestion(res.data.data);
+        setListQuestion(data);
+        const newArr = [];
+        for (let i = 0; i < data.length; i++) {
+          newArr.push({ id: data[i].id, isAnswered: false });
+        }
+        setListAnswerButton(newArr);
       })
       .catch((err) => {
         setLoading(false);
@@ -71,29 +83,31 @@ export const Home = () => {
   const handleSubmit = () => {
     console.log(listAnswer);
     setLoading(true);
-    axiosInstance
-      .post(
-        "/games/finishGame",
-        {
-          examId: 24,
-          userId: _userId,
-          listAnswer: listAnswer,
-          totalTime: examParams.totalTime,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    console.log(listAnswerButton);
+
+    // axiosInstance
+    //   .post(
+    //     "/games/finishGame",
+    //     {
+    //       examId: 24,
+    //       userId: _userId,
+    //       listAnswer: listAnswer,
+    //       totalTime: examParams.totalTime,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     console.log(res);
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setLoading(false);
+    //   });
   };
 
   return (
@@ -118,9 +132,31 @@ export const Home = () => {
                 Start
               </button>
             ) : (
-              <button type="button" onClick={handleSubmit}>
-                Submit
-              </button>
+              <>
+                <div className="list-button">
+                  {listAnswerButton.map((button) => {
+                    return (
+                      <div
+                        key={button.id}
+                        className="answer-button"
+                        style={
+                          button.isAnswered
+                            ? { background: "#333", color: "#fff" }
+                            : null
+                        }
+                        onClick={() => {
+                          scrollToQuestion(button.id);
+                        }}
+                      >
+                        {button.id}
+                      </div>
+                    );
+                  })}
+                </div>
+                <button type="button" onClick={handleSubmit}>
+                  Submit
+                </button>
+              </>
             )}
           </div>
           <div className="right-side col-9">
@@ -129,7 +165,12 @@ export const Home = () => {
                 <Question
                   key={question.id}
                   question={question}
-                  handleChange={[listAnswer, setListAnswer]}
+                  handleChange={[
+                    listAnswer,
+                    setListAnswer,
+                    listAnswerButton,
+                    setListAnswerButton,
+                  ]}
                 />
               );
             })}
