@@ -7,7 +7,11 @@ export const Question = (props) => {
   const setListAnswer = props.handleChange[1];
   const listAnswerButton = props.handleChange[2];
   const setListAnswerButton = props.handleChange[3];
+  
+  // split questionContent into 4 answers
+  const splittedContent = questionContent.split("|");
 
+  // check whether this question was answered before 
   const isExistedId = (arr, id) => {
     return arr.findIndex((arr) => {
       return arr.id == id;
@@ -16,7 +20,7 @@ export const Question = (props) => {
 
   const handleOnChange = (e) => {
     const answerId = isExistedId(listAnswer, parseInt(e.target.name));
-    // this question has not be answered
+    // this question is not answered
     if (answerId < 0) {
       setListAnswer([
         ...listAnswer,
@@ -41,9 +45,6 @@ export const Question = (props) => {
       setListAnswer(newListAnswer);
     }
   };
-
-  // split questionContent into 4 answers
-  const splittedContent = questionContent.split("|");
 
   return (
     <div className="question-wrapper" id={id}>

@@ -11,6 +11,7 @@ import "./home.css";
 import "../register/register.css";
 
 import { Question } from "../question/Question";
+import { Timer } from "../timer/Timer";
 
 export const Home = () => {
   const userCtx = useContext(UserContext);
@@ -128,11 +129,15 @@ export const Home = () => {
         <div className="row">
           <div className="left-side col-3">
             {!start ? (
-              <button type="button" onClick={handleStart}>
-                Start
-              </button>
+              <>
+                <button type="button" onClick={handleStart}>
+                  Start
+                </button>
+              </>
             ) : (
               <>
+                <Timer initialMinutes={examParams.totalTime} />
+                  <div>Completed: {listAnswer.length}/{examParams.quantity}</div>
                 <div className="list-button">
                   {listAnswerButton.map((button) => {
                     return (
@@ -153,7 +158,7 @@ export const Home = () => {
                     );
                   })}
                 </div>
-                <button type="button" onClick={handleSubmit}>
+                <button type="button" onClick={handleSubmit} className="red-btn">
                   Submit
                 </button>
               </>

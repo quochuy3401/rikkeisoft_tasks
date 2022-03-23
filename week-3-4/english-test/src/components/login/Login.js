@@ -89,7 +89,7 @@ export const Login = () => {
         .then((res) => {
           // success
           if (res.data.code === 200) {
-            console.log(res.data.data);
+            console.log(res);
             // store username in localStorage if remember me is checked
             if (isChecked) {
               console.log(isChecked);
