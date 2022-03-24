@@ -1,7 +1,6 @@
 import {
   faEye,
   faEyeSlash,
-  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -9,6 +8,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
+import { LoadingIndicator } from "../../share/LoadingIndicator";
 import axiosInstance from "../../util/axiosInstance";
 import "../register/register.css";
 
@@ -185,9 +185,7 @@ export const Login = () => {
       </Modal>
       {/* spin loading */}
       {loading ? (
-        <div className="loading-layout">
-          <FontAwesomeIcon icon={faSpinner} spin size="2x" />
-        </div>
+       <LoadingIndicator size="2x"/>
       ) : null}
     </div>
   );

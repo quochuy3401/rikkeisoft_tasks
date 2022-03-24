@@ -5,12 +5,12 @@ import "./register.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
-  faEyeSlash,
-  faSpinner,
+  faEyeSlash
 } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "../../util/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
+import { LoadingIndicator } from "../../share/LoadingIndicator";
 
 export const Register = () => {
   const [values, setValues] = useState({
@@ -231,9 +231,7 @@ export const Register = () => {
         </Modal.Footer>
       </Modal>
       {loading ? (
-        <div className="loading-layout">
-          <FontAwesomeIcon icon={faSpinner} spin size="2x" />
-        </div>
+        <LoadingIndicator size="2x"/>
       ) : null}
     </div>
   );

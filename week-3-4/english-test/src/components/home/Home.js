@@ -1,6 +1,6 @@
 import {
+  faCircleExclamation,
   faRightFromBracket,
-  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useState } from "react";
@@ -9,20 +9,25 @@ import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
 import "./home.css";
 import "../register/register.css";
+import "../../App.css";
 
 import { Question } from "../question/Question";
 import { Timer } from "../timer/Timer";
+import { LoadingIndicator } from "../../share/LoadingIndicator";
+import { ExamContext } from "../../context/exam";
 
 export const Home = () => {
   const userCtx = useContext(UserContext);
+  const examCtx = useContext(ExamContext);
   const navigate = useNavigate();
-  const [examParams, setExamParams] = useState({
-    totalPoint: 0,
-    totalTime: 0,
-    quantity: 0,
-  });
+  // const [examParams, setExamParams] = useState({
+  //   totalPoint: 0,
+  //   totalTime: 0,
+  //   quantity: 0,
+  // });
   const [start, setStart] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const [listQuestion, setListQuestion] = useState([]);
   const [listAnswer, setListAnswer] = useState([]);
   const [listAnswerButton, setListAnswerButton] = useState([]);
@@ -43,8 +48,6 @@ export const Home = () => {
 
   //get game
   const handleStart = () => {
-    // console.log(_userId);
-    // console.log(token);
     setLoading(true);
     axiosInstance
       .post(
@@ -62,9 +65,14 @@ export const Home = () => {
       .then((res) => {
         setLoading(false);
         const data = res.data.data;
-        setExamParams({
+        // setExamParams({
+        //   totalPoint: res.data.totalPoint,
+        //   totalTime: 1,
+        //   quantity: data.length,
+        // });
+        examCtx.setExam({
           totalPoint: res.data.totalPoint,
-          totalTime: res.data.totalTime,
+          totalTime: 1,
           quantity: data.length,
         });
         setStart(true);
@@ -80,35 +88,37 @@ export const Home = () => {
         console.log(err);
       });
   };
-
-  const handleSubmit = () => {
+  const handleFinish = () => {
     console.log(listAnswer);
+    setShow(false);
     setLoading(true);
     console.log(listAnswerButton);
-
-    // axiosInstance
-    //   .post(
-    //     "/games/finishGame",
-    //     {
-    //       examId: 24,
-    //       userId: _userId,
-    //       listAnswer: listAnswer,
-    //       totalTime: examParams.totalTime,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     console.log(res);
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     setLoading(false);
-    //   });
+    axiosInstance
+      .post(
+        "/games/finishGame",
+        {
+          examId: 24,
+          userId: _userId,
+          listAnswer: listAnswer,
+          // totalTime: examParams.totalTime,
+          totalTime: examCtx.exam.totalTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        examCtx.setExam({...examCtx.exam, scores: res.data.scores});
+        // setLoading(false);
+        navigate("/result");
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   return (
@@ -118,7 +128,11 @@ export const Home = () => {
           <div>
             Your id: <span>{userCtx.user.id}</span>
           </div>
-          <button type="button" onClick={handleLogOut}>
+          <button
+            className="btn btn-success"
+            type="button"
+            onClick={handleLogOut}
+          >
             Log out &nbsp;
             <FontAwesomeIcon icon={faRightFromBracket} />
           </button>
@@ -130,14 +144,23 @@ export const Home = () => {
           <div className="left-side col-3">
             {!start ? (
               <>
-                <button type="button" onClick={handleStart}>
+                <button
+                  className="btn-success"
+                  type="button"
+                  onClick={handleStart}
+                >
                   Start
                 </button>
               </>
             ) : (
               <>
-                <Timer initialMinutes={examParams.totalTime} />
-                  <div>Completed: {listAnswer.length}/{examParams.quantity}</div>
+                <Timer
+                  initialMinutes={examCtx.exam.totalTime}
+                  handleTimeOut={handleFinish}
+                />
+                <div>
+                  Completed: {listAnswer.length}/{examCtx.exam.quantity}
+                </div>
                 <div className="list-button">
                   {listAnswerButton.map((button) => {
                     return (
@@ -158,7 +181,13 @@ export const Home = () => {
                     );
                   })}
                 </div>
-                <button type="button" onClick={handleSubmit} className="red-btn">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                  className="btn-danger"
+                >
                   Submit
                 </button>
               </>
@@ -183,9 +212,32 @@ export const Home = () => {
         </div>
       </div>
       {/* spin loading */}
-      {loading ? (
-        <div className="loading-layout">
-          <FontAwesomeIcon icon={faSpinner} spin size="2x" />
+      {loading ? <LoadingIndicator size="2x" /> : null}
+
+      {/* modal */}
+      {show ? (
+        <div className="loading">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div>
+                <FontAwesomeIcon icon={faCircleExclamation} size="3x" />
+              </div>
+              <h2>Are you sure finish?</h2>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-primary" onClick={handleFinish}>
+                Yes!
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  setShow(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       ) : null}
     </div>

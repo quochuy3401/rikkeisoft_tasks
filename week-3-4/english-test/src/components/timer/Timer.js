@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 
 export const Timer = (props) => {
-  const { initialMinutes = 0, initialSeconds = 0 } = props;
+  const { initialMinutes = 0, initialSeconds = 0, handleTimeOut} = props;
   const [minutes, setMinutes] = useState(initialMinutes);
   const [seconds, setSeconds] = useState(initialSeconds);
   useEffect(() =>{
@@ -15,6 +15,7 @@ export const Timer = (props) => {
           if(seconds === 0){
               if(minutes === 0){
                   clearInterval(myInterval);
+                  handleTimeOut()
               } else {
                 setMinutes(minutes-1);
                 setSeconds(59);

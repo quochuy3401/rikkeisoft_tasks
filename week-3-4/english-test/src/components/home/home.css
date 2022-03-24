@@ -34,7 +34,8 @@
 }
 .test-wrapper {
   /* background: #fff !important; */
-  background: #fff
+  background: #fff;
+  min-height: 100vh;
 }
 .list-button {
   display: flex;
