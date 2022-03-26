@@ -7,11 +7,10 @@ export const Question = (props) => {
   const setListAnswer = props.handleChange[1];
   const listAnswerButton = props.handleChange[2];
   const setListAnswerButton = props.handleChange[3];
-  
+
   // split questionContent into 4 answers
   const splittedContent = questionContent.split("|");
 
-  // check whether this question was answered before 
   const isExistedId = (arr, id) => {
     return arr.findIndex((arr) => {
       return arr.id == id;
@@ -19,6 +18,7 @@ export const Question = (props) => {
   };
 
   const handleOnChange = (e) => {
+    // check whether this question was answered before
     const answerId = isExistedId(listAnswer, parseInt(e.target.name));
     // this question is not answered
     if (answerId < 0) {
@@ -33,7 +33,7 @@ export const Question = (props) => {
         id: e.target.name,
         isAnswered: true,
       };
-      setListAnswerButton(newListAnswerButton)
+      setListAnswerButton(newListAnswerButton);
     }
     // change answer of this question
     else {
@@ -52,41 +52,49 @@ export const Question = (props) => {
         {id}. {questionTitle}
       </p>
       <div className="row">
-        <div className="answer col-6">
-          <input
-            type="radio"
-            name={id}
-            value={splittedContent[0]}
-            onChange={handleOnChange}
-          />
-          <label>A. {splittedContent[0]}</label>
+        <div className="answer col-sm-12 col-md-6">
+          <label>
+            <input
+              type="radio"
+              name={id}
+              value={splittedContent[0]}
+              onChange={handleOnChange}
+            />
+            <div>A. {splittedContent[0]}</div>
+          </label>
         </div>
-        <div className="answer col-6">
-          <input
-            type="radio"
-            name={id}
-            value={splittedContent[1]}
-            onChange={handleOnChange}
-          />
-          <label>B. {splittedContent[1]}</label>
+        <div className="answer col-sm-12 col-md-6">
+          <label>
+            <input
+              type="radio"
+              name={id}
+              value={splittedContent[1]}
+              onChange={handleOnChange}
+            />
+            <div>B. {splittedContent[1]}</div>
+          </label>
         </div>
-        <div className="answer col-6">
-          <input
-            type="radio"
-            name={id}
-            value={splittedContent[2]}
-            onChange={handleOnChange}
-          />
-          <label>C. {splittedContent[2]}</label>
+        <div className="answer col-sm-12 col-md-6">
+          <label>
+            <input
+              type="radio"
+              name={id}
+              value={splittedContent[2]}
+              onChange={handleOnChange}
+            />
+            <div>C. {splittedContent[2]}</div>
+          </label>
         </div>
-        <div className="answer col-6">
-          <input
-            type="radio"
-            name={id}
-            value={splittedContent[3]}
-            onChange={handleOnChange}
-          />
-          <label>D. {splittedContent[3]}</label>
+        <div className="answer col-sm-12 col-md-6">
+          <label>
+            <input
+              type="radio"
+              name={id}
+              value={splittedContent[3]}
+              onChange={handleOnChange}
+            />
+            <div>D. {splittedContent[3]}</div>
+          </label>
         </div>
       </div>
     </div>

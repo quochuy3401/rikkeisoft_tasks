@@ -209,7 +209,7 @@ export const Register = () => {
 
                 {errors.password && <span>{errors.password}</span>}
               </div>
-              <button type="submit">Register</button>
+              <button className="btn-success" type="submit">Register</button>
               <p className="navigate">
                 Already have an account?{" "}
                 <span onClick={handleNavigate}>Sign in</span>

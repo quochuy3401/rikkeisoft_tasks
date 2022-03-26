@@ -3,6 +3,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  background: #010409;
 }
 .register-content {
   background-color: transparent;

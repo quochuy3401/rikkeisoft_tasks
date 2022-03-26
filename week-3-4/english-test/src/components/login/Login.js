@@ -162,7 +162,7 @@ export const Login = () => {
                 />
                 <label htmlFor="rememberCheckbox">Remember Me</label>
               </div>
-              <button type="submit">Sign in</button>
+              <button className="btn-success" type="submit">Sign in</button>
               <p className="navigate">
                 Don't have an account?{" "}
                 <span onClick={handleNavigate}>Register</span>

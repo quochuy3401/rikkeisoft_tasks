@@ -12,3 +12,9 @@
 .answer input[type="radio"]{
     margin: 5px;
 }
+.answer label{
+  display: flex;
+}
+.answer label:hover{
+  cursor: pointer;
+}
