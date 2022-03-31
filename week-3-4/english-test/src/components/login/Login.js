@@ -100,7 +100,7 @@ export const Login = () => {
             userCtx.setUser(res.data.data); 
             // JSON.stringify(res.data.data)
             setLoading(false);
-            navigate("/");
+            navigate("/quiz");
           }
         })
         .catch((err) => {
@@ -123,7 +123,7 @@ export const Login = () => {
       <div className="container">
         <div className="row register-content justify-content-center">
           <div className="register-img col-xl-6">
-            <img src="../../../images/login-3.gif" alt="image" />
+            <img src="../../../images/login-3.gif" alt="login" />
           </div>
           <div className="register-form col-xl-6  col-lg-6">
             <h2>Sign in</h2>

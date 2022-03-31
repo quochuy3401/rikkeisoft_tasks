@@ -1,0 +1,45 @@
+.lesson-wrapper {
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.lesson-wrapper p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.lesson-wrapper p span {
+    font-weight: bold;
+}
+
+.lesson-wrapper .exam-name {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.lesson-wrapper .tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    color: #fff;
+    background: red;
+    border: none;
+
+}
+
+.lesson-wrapper button {
+    background: #74b9ff;
+    color: #fff;
+    font-size: 16px;
+    height: 24px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+}

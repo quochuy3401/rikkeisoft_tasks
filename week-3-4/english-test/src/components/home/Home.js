@@ -1,148 +1,130 @@
 import {
-  faArrowUpLong,
-  faBars,
-  faCircleExclamation,
+  faMagnifyingGlass,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
 import "./home.css";
-import "../register/register.css";
-import "../../App.css";
-
-import { Question } from "../question/Question";
-import { Timer } from "../timer/Timer";
+import { ExamHistory } from "../exam-history/ExamHistory";
 import { LoadingIndicator } from "../../share/LoadingIndicator";
-import { ExamContext } from "../../context/exam";
+import { Category } from "../category/Category";
+import { Lesson } from "../lesson/Lesson";
+import ReactPagination from "react-paginate";
 
 export const Home = () => {
   const userCtx = useContext(UserContext);
-  const examCtx = useContext(ExamContext);
-  const navigate = useNavigate();
-
-  const [start, setStart] = useState(false);
+  const { user } = userCtx;
+  const { token, id } = user;
+  const [categories, setCategories] = useState([]);
+  const [listHistory, setListHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [show, setShow] = useState(false);
-  const [listQuestion, setListQuestion] = useState([]);
-  const [listAnswer, setListAnswer] = useState([]);
-  const [listAnswerButton, setListAnswerButton] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const _userId = userCtx.user.id.toString();
-  const token = userCtx.user.token;
+  const [listLesson, setListLesson] = useState([]);
+  const [onePageLesson, setOnePageLesson] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageCount: 0,
+    limit: 8,
+  });
 
-  //remove userinfo in localStorage and UserContext
+  useEffect(() => {
+    axiosInstance
+      .get("/categories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setCategories(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    axiosInstance
+      .get(`/results/getByUser/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setListHistory(res.data.data);
+      });
+
+    axiosInstance
+      .get(`/exams/getListExamByCategory/1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const data = res.data.data;
+        setListLesson(data);
+        const _pageCount = Math.ceil(data.length / pagination.limit);
+        setPagination({ ...pagination, pageCount: _pageCount });
+        const newList = data.slice(0, pagination.limit);
+        setOnePageLesson(newList);
+      })
+      .catch((err) => {
+        console.log(err.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   const handleLogOut = () => {
     localStorage.removeItem("userinfo");
     userCtx.setUser(null);
-    navigate("/login");
+    Navigate("/login");
   };
 
-  const scrollToQuestion = (id) => {
-    const target = document.getElementById(id).getBoundingClientRect().top - 70; //minus height of navbar
-    window.scrollTo({ top: target, behavior: "smooth" });
-  };
-
-  //get game
-  const handleStart = () => {
+  const getListByCategory = (categoryId) => {
     setLoading(true);
     axiosInstance
-      .post(
-        "/games/getGame",
-        {
-          examId: 24,
-          userId: _userId,
+      .get(`/exams/getListExamByCategory/${categoryId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      })
       .then((res) => {
-        setLoading(false);
+        console.log(res.data);
         const data = res.data.data;
-        // setExamParams({
-        //   totalPoint: res.data.totalPoint,
-        //   totalTime: 1,
-        //   quantity: data.length,
-        // });
-        examCtx.setExam({
-          totalPoint: res.data.totalPoint,
-          totalTime: res.data.totalTime,
-          quantity: data.length,
-        });
-        setStart(true);
-        setListQuestion(data);
-        const newArr = [];
-        for (let i = 0; i < data.length; i++) {
-          newArr.push({ id: data[i].id, isAnswered: false });
-        }
-        setListAnswerButton(newArr);
+        setListLesson(data);
+        const _pageCount = Math.ceil(data.length / pagination.limit);
+        setPagination({ ...pagination, pageCount: _pageCount });
+        const newList = data.slice(0, pagination.limit);
+        setOnePageLesson(newList);
       })
       .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
-  };
-  const handleFinish = () => {
-    console.log(listAnswer);
-    setShow(false);
-    setLoading(true);
-    console.log(listAnswerButton);
-    axiosInstance
-      .post(
-        "/games/finishGame",
-        {
-          examId: 24,
-          userId: _userId,
-          listAnswer: listAnswer,
-          // totalTime: examParams.totalTime,
-          totalTime: examCtx.exam.totalTime,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        examCtx.setExam({ ...examCtx.exam, scores: res.data.scores });
-        // setLoading(false);
-        navigate("/result");
+        console.log(err.data);
       })
-      .catch((err) => {
-        console.log(err);
+      .finally(() => {
         setLoading(false);
       });
-  };
-  const toggleVisible = () => {
-    const scrolled =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    if (scrolled > 200) {
-      setVisible(true);
-    } else if (scrolled <= 200) {
-      setVisible(false);
-    }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  const handlePageClick = (data) => {
+    console.log(data.selected);
+    const currentPage = data.selected + 1;
+    const newList = listLesson.slice(
+      (currentPage - 1) * pagination.limit,
+      currentPage * pagination.limit
+    );
+    setOnePageLesson(newList);
   };
-  window.addEventListener("scroll", toggleVisible);
 
   return (
     <div className="home-page">
+      {/* navbar */}
       <div className="info-navbar">
         <div className="container">
           <div className="align-items-center justify-content-center d-flex">
-            Your id: <span>{userCtx.user.id}</span>
+            {user.firstName + " " + user.lastName}
           </div>
           <button className="btn" type="button" onClick={handleLogOut}>
             Log out &nbsp;
@@ -150,120 +132,76 @@ export const Home = () => {
           </button>
         </div>
       </div>
-
-      <div className="container test-wrapper">
-        <div className="row">
-          <div className="left-side col-md-12 col-lg-3">
-            {!start ? (
-              <div>
-                <button
-                  className="btn-success"
-                  type="button"
-                  onClick={handleStart}
-                >
-                  Start
-                </button>
-              </div>
-            ) : (
-              <div className="exam-manager">
-                <Timer
-                  initialMinutes={examCtx.exam.totalTime}
-                  handleTimeOut={handleFinish}
-                />
-                <div>
-                  Completed: {listAnswer.length}/{examCtx.exam.quantity}
-                </div>
-                <div className="list-button">
-                  {listAnswerButton.map((button) => {
-                    return (
-                      <div
-                        key={button.id}
-                        className="answer-button"
-                        style={
-                          button.isAnswered
-                            ? { background: "#333", color: "#fff" }
-                            : null
-                        }
-                        onClick={() => {
-                          scrollToQuestion(button.id);
-                        }}
-                      >
-                        {button.id}
-                      </div>
-                    );
-                  })}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShow(true);
-                  }}
-                  className="btn-danger btn"
-                >
-                  Submit
-                </button>
-              </div>
-            )}
+      {/* body */}
+      <div className="home-body ">
+        <div className="left-container">
+          <div className="user-name">
+            {user.firstName + " " + user.lastName}
           </div>
-          <div className="right-side col-md-12  col-lg-9 ">
-            {listQuestion.map((question) => {
+          {categories.map((category) => {
+            return (
+              <Category
+                key={category.id}
+                id={category.id}
+                categoryName={category.categoryName}
+                handleGetList={getListByCategory}
+              />
+            );
+          })}
+        </div>
+        <div className="center-container 6">
+          <div className="row">
+            <form className="col-6 search">
+              <input type="text" placeholder="Search" />
+              <button>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </button>
+            </form>
+          </div>
+          <div className="list-lesson row">
+            {onePageLesson.map((lesson) => {
               return (
-                <Question
-                  key={question.id}
-                  question={question}
-                  handleChange={[
-                    listAnswer,
-                    setListAnswer,
-                    listAnswerButton,
-                    setListAnswerButton,
-                  ]}
-                />
+                <div className="col-6">
+                  <Lesson
+                    examName={lesson.examName}
+                    totalPoint={lesson.totalPoint}
+                    totalTime={lesson.totalTime}
+                  />
+                </div>
               );
+            })}
+          </div>
+          <ReactPagination
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={3}
+            pageCount={pagination.pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+            activeClassName={"active"}
+          />
+        </div>
+        <div className="right-container ">
+          <div className="center-item">History</div>
+          <div className="list-history">
+            {listHistory.map((history) => {
+              return <ExamHistory key={history.id} history={history} />;
             })}
           </div>
         </div>
       </div>
 
-      {/* spin loading */}
-      {loading ? <LoadingIndicator size="2x" /> : null}
-
-      {/* modal */}
-      {show ? (
-        <div className="loading">
-          <div className="modal-content">
-            <div className="modal-body">
-              <div>
-                <FontAwesomeIcon
-                  icon={faCircleExclamation}
-                  size="3x"
-                  color="red"
-                />
-              </div>
-              <h2>Are you sure finish?</h2>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-primary" onClick={handleFinish}>
-                Yes!
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => {
-                  setShow(false);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-      <a
-        id="scrollToTop"
-        onClick={scrollToTop}
-        style={{ display: visible ? "block" : "none" }}
-      >
-        <FontAwesomeIcon icon={faArrowUpLong} />
-      </a>
+      {loading && <LoadingIndicator />}
     </div>
   );
 };

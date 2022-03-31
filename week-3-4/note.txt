@@ -1,0 +1,14 @@
+Quoc huy: 
+	+ Loại bỏ hết các warning trong code (vd: các hàm, biến, hook thêm vào component mà ko sử dụng, dùng dấu === thay vì ==, !== thay vì != ...)
+Nam:
+	+ Thêm hiệu ứng hover cho bảng câu hỏi, đổi icon chuột khi hover vào ô số
+	+ Sửa lại để click vào button(ô số) để scroll thay vì phải click vào đúng chữ số
+	+ Để sidebar bên trái ở trạng thái fixed, chỉ scroll phần nội dung hoặc thêm button scroll to top phía dưới
+	+ Loại bỏ hết các warning trong code (vd: các hàm, biến, hook thêm vào component mà ko sử dụng, dùng dấu === thay vì ==, !== thay vì != ...)
+	+ dùng eslint để format code cho gọn gàng
+Cuong: 
+	+ Thêm hiệu ứng hover cho bảng câu hỏi, đổi icon chuột khi hover vào ô số
+	+ Sửa lại để click vào button(ô số) để scroll thay vì phải click vào đúng chữ số
+	+ Để sidebar bên trái ở trạng thái fixed, chỉ scroll phần nội dung hoặc thêm button scroll to top phía dưới 
+	+ Loại bỏ hết các warning trong code (vd: các hàm, biến, hook thêm vào component mà ko sử dụng, dùng dấu === thay vì ==, !== thay vì != ...)
+	+ dùng eslint để format code cho gọn gàng

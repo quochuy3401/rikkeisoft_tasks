@@ -3,11 +3,12 @@ import "./App.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Register } from "./components/register/Register";
 import { Login } from "./components/login/Login";
-import { Home } from "./components/home/Home";
+import { Quiz } from "./components/quiz/Quiz";
 import { UserContext } from "../src/context/user";
 import { ExamContext } from "../src/context/exam";
 import { useEffect, useState } from "react";
 import { Result } from "./components/result/Result";
+import { Home } from "./components/home/Home";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -24,7 +25,7 @@ function App() {
     } else {
       setSigningIn(false);
       setUser(JSON.parse(userinfo));
-      navigate("/");
+      navigate("/home");
     }
   }, []);
   return (
@@ -36,8 +37,9 @@ function App() {
               <Routes>
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/quiz" element={<Quiz />} />
                 <Route path="/result" element={<Result />} />
+                <Route path="/home" element={<Home />} />
               </Routes>
             </>
           )}

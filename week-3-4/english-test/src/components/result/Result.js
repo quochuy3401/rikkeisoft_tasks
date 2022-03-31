@@ -9,7 +9,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import { ExamContext } from "../../context/exam";
-import "../home/Home";
+import "../quiz/Quiz";
 
 export const Result = () => {
   const userCtx = useContext(UserContext);
@@ -53,7 +53,7 @@ export const Result = () => {
   chooseMassage();
   return (
     <>
-      <div className="home-page">
+      <div className="quiz-page">
         <div className="info-navbar">
           <div className="container">
             <div>

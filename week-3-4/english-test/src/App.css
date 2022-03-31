@@ -1,26 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Courgette&display=swap');
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   /* color: #fff; */
 }
+
 body {
   /* background-image: url("../public/images/bg-1.jpg");
 background-repeat: no-repeat;
 background-size: cover; */
   /* background: #010409; */
 }
+
 button {
   font-size: 16px;
   padding: 5px;
   border-radius: 5px;
 }
+
 @media (min-width: 1400px) {
   .container {
     max-width: 1140px !important;
   }
 }
+
 /* .App{
   min-height: 100vh;
   position: relative;
@@ -37,16 +42,27 @@ button {
   align-items: center;
   justify-content: center;
 }
+
 .red-btn {
   color: #fff;
   background: red;
 }
+
 .modal-content {
   width: 500px;
   align-items: center;
   height: max-content;
   text-align: center;
 }
-.modal-content svg{
+
+.modal-content svg {
   margin: 20px 0px;
+}
+
+
+
+.center-item {
+  display: flex;
+  justify-content: center;
+  text-align: center;
 }
