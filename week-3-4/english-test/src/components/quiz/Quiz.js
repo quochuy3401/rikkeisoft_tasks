@@ -4,8 +4,8 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
 import "./quiz.css";
@@ -21,6 +21,8 @@ export const Quiz = () => {
   const userCtx = useContext(UserContext);
   const examCtx = useContext(ExamContext);
   const navigate = useNavigate();
+  const params = useParams();
+  const quizId = parseInt(params.id);
 
   const [start, setStart] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,6 +33,10 @@ export const Quiz = () => {
   const [visible, setVisible] = useState(false);
   const _userId = userCtx.user.id.toString();
   const token = userCtx.user.token;
+
+  useEffect(() => {
+    handleStart();
+  }, []);
 
   //remove userinfo in localStorage and UserContext
   const handleLogOut = () => {
@@ -44,6 +50,7 @@ export const Quiz = () => {
     window.scrollTo({ top: target, behavior: "smooth" });
   };
 
+
   //get game
   const handleStart = () => {
     setLoading(true);
@@ -51,7 +58,7 @@ export const Quiz = () => {
       .post(
         "/games/getGame",
         {
-          examId: 24,
+          examId: quizId,
           userId: _userId,
         },
         {
@@ -61,19 +68,14 @@ export const Quiz = () => {
         }
       )
       .then((res) => {
-        setLoading(false);
         const data = res.data.data;
-        // setExamParams({
-        //   totalPoint: res.data.totalPoint,
-        //   totalTime: 1,
-        //   quantity: data.length,
-        // });
         examCtx.setExam({
           totalPoint: res.data.totalPoint,
           totalTime: res.data.totalTime,
           quantity: data.length,
         });
         setStart(true);
+        console.log(data);
         setListQuestion(data);
         const newArr = [];
         for (let i = 0; i < data.length; i++) {
@@ -82,10 +84,13 @@ export const Quiz = () => {
         setListAnswerButton(newArr);
       })
       .catch((err) => {
-        setLoading(false);
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
+
   const handleFinish = () => {
     console.log(listAnswer);
     setShow(false);
@@ -95,10 +100,9 @@ export const Quiz = () => {
       .post(
         "/games/finishGame",
         {
-          examId: 24,
+          examId: quizId,
           userId: _userId,
           listAnswer: listAnswer,
-          // totalTime: examParams.totalTime,
           totalTime: examCtx.exam.totalTime,
         },
         {
@@ -118,6 +122,7 @@ export const Quiz = () => {
         setLoading(false);
       });
   };
+
   const toggleVisible = () => {
     const scrolled =
       document.documentElement.scrollTop || document.body.scrollTop;
@@ -134,6 +139,7 @@ export const Quiz = () => {
       behavior: "smooth",
     });
   };
+
   window.addEventListener("scroll", toggleVisible);
 
   return (
@@ -150,20 +156,10 @@ export const Quiz = () => {
         </div>
       </div>
 
-      <div className="container test-wrapper">
+      <div className="container quiz-wrapper">
         <div className="row">
           <div className="left-side col-md-12 col-lg-3">
-            {!start ? (
-              <div>
-                <button
-                  className="btn-success"
-                  type="button"
-                  onClick={handleStart}
-                >
-                  Start
-                </button>
-              </div>
-            ) : (
+            {start && (
               <div className="exam-manager">
                 <Timer
                   initialMinutes={examCtx.exam.totalTime}
@@ -173,10 +169,10 @@ export const Quiz = () => {
                   Completed: {listAnswer.length}/{examCtx.exam.quantity}
                 </div>
                 <div className="list-button">
-                  {listAnswerButton.map((button) => {
+                  {listAnswerButton.map((button, index) => {
                     return (
                       <div
-                        key={button.id}
+                        key={index}
                         className="answer-button"
                         style={
                           button.isAnswered
@@ -187,7 +183,7 @@ export const Quiz = () => {
                           scrollToQuestion(button.id);
                         }}
                       >
-                        {button.id}
+                        {index + 1}
                       </div>
                     );
                   })}
@@ -205,10 +201,11 @@ export const Quiz = () => {
             )}
           </div>
           <div className="right-side col-md-12  col-lg-9 ">
-            {listQuestion.map((question) => {
+            {listQuestion.map((question, index) => {
               return (
                 <Question
                   key={question.id}
+                  index={index}
                   question={question}
                   handleChange={[
                     listAnswer,
@@ -224,10 +221,10 @@ export const Quiz = () => {
       </div>
 
       {/* spin loading */}
-      {loading ? <LoadingIndicator size="2x" /> : null}
+      {loading && <LoadingIndicator size="2x" />}
 
       {/* modal */}
-      {show ? (
+      {show && (
         <div className="loading">
           <div className="modal-content">
             <div className="modal-body">
@@ -255,14 +252,14 @@ export const Quiz = () => {
             </div>
           </div>
         </div>
-      ) : null}
-      <a
-        id="scrollToTop"
-        onClick={scrollToTop}
-        style={{ display: visible ? "block" : "none" }}
-      >
-        <FontAwesomeIcon icon={faArrowUpLong} />
-      </a>
+      )}
+
+      {/* scroll to top button  */}
+      {visible && (
+        <div id="scrollToTop" onClick={scrollToTop}>
+          <FontAwesomeIcon icon={faArrowUpLong} />
+        </div>
+      )}
     </div>
   );
 };

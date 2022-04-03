@@ -48,7 +48,7 @@
 
   /* position: fixed; */
 }
-.test-wrapper {
+.quiz-wrapper {
   /* background: #fff !important; */
   background: #fff;
   min-height: 100vh;
@@ -99,7 +99,7 @@
 @media (max-width: 991.98px) {
   .left-side {
   }
-  .test-wrapper > .row {
+  .quiz-wrapper > .row {
     flex-direction: column;
   }
   .right-side {

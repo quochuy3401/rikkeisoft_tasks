@@ -9,13 +9,14 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import { ExamContext } from "../../context/exam";
-import "../quiz/Quiz";
+import "../quiz/quiz.css";
 
 export const Result = () => {
   const userCtx = useContext(UserContext);
   const examCtx = useContext(ExamContext);
   const { exam } = examCtx;
   const { user } = userCtx;
+  const navigate = useNavigate();
   const messages = [
     {
       icon: faFaceFrown,
@@ -34,13 +35,18 @@ export const Result = () => {
     },
   ];
   let messageTheme = {};
-  const navigate = useNavigate();
   console.log(examCtx.exam);
+
   const handleLogOut = () => {
     localStorage.removeItem("userinfo");
     userCtx.setUser(null);
     navigate("/login");
   };
+
+  const backToHome =()=>{
+    navigate("/home");
+  }
+
   function chooseMassage() {
     if (exam.scores < 50) {
       messageTheme = messages[0];
@@ -50,6 +56,7 @@ export const Result = () => {
       messageTheme = messages[2];
     }
   }
+
   chooseMassage();
   return (
     <>
@@ -69,7 +76,7 @@ export const Result = () => {
             </button>
           </div>
         </div>
-        <div className="container test-wrapper d-flex justify-content-center align-items-center flex-column">
+        <div className="container quiz-wrapper d-flex justify-content-center align-items-center flex-column">
           <FontAwesomeIcon
             icon={messageTheme.icon}
             size="5x"
@@ -82,6 +89,7 @@ export const Result = () => {
             </span>
           </h1>
           <p>{messageTheme.message}</p>
+          <button className="btn btn-primary" onClick={backToHome}>Back to Home</button>
         </div>
       </div>
     </>

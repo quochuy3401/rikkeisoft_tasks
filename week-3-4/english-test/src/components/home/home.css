@@ -53,7 +53,7 @@
   width: 50vw;
   border-left: 1px solid grey;
   border-right: 1px solid grey;
-  /* position: relative; */
+  position: relative;
 }
 .left-container .user-name {
   /* width: 100%; */
@@ -118,9 +118,9 @@
   color: grey;
   
 }
-/* .pagination{
+.pagination{
   position: absolute;
   bottom: 30px;
   right: auto;
   left: auto;
-} */
+}

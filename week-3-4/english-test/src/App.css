@@ -26,11 +26,6 @@ button {
   }
 }
 
-/* .App{
-  min-height: 100vh;
-  position: relative;
-  padding: 70px;
-} */
 .loading {
   position: fixed;
   top: 0;

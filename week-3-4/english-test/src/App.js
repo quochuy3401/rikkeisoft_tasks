@@ -37,12 +37,16 @@ function App() {
               <Routes>
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
-                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/quiz/:id" element={<Quiz />} />
                 <Route path="/result" element={<Result />} />
                 <Route path="/home" element={<Home />} />
               </Routes>
             </>
           )}
+          {/* <Routes>
+
+           <Route path="/result" element={<Result />} />
+          </Routes> */}
         </ExamContext.Provider>
       </UserContext.Provider>
     </div>

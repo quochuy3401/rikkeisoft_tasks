@@ -2,6 +2,7 @@ import React from "react";
 import "./question.css";
 
 export const Question = (props) => {
+  const { index } = props;
   const { id, questionTitle, questionContent } = props.question;
   const listAnswer = props.handleChange[0];
   const setListAnswer = props.handleChange[1];
@@ -19,9 +20,9 @@ export const Question = (props) => {
 
   const handleOnChange = (e) => {
     // check whether this question was answered before
-    const answerId = isExistedId(listAnswer, parseInt(e.target.name));
+    const answerIndex = isExistedId(listAnswer, parseInt(e.target.name));
     // this question is not answered
-    if (answerId < 0) {
+    if (answerIndex < 0) {
       setListAnswer([
         ...listAnswer,
         { id: parseInt(e.target.name), questionAnswer: e.target.value },
@@ -29,8 +30,8 @@ export const Question = (props) => {
 
       // update listAnswerButton
       const newListAnswerButton = [...listAnswerButton];
-      newListAnswerButton[e.target.name - 1] = {
-        id: e.target.name,
+      newListAnswerButton[index] = {
+        id: parseInt(e.target.name),
         isAnswered: true,
       };
       setListAnswerButton(newListAnswerButton);
@@ -38,7 +39,7 @@ export const Question = (props) => {
     // change answer of this question
     else {
       const newListAnswer = [...listAnswer];
-      newListAnswer[answerId] = {
+      newListAnswer[answerIndex] = {
         id: parseInt(e.target.name),
         questionAnswer: e.target.value,
       };
@@ -49,7 +50,7 @@ export const Question = (props) => {
   return (
     <div className="question-wrapper" id={id}>
       <p className="question-title">
-        {id}. {questionTitle}
+        {index + 1}. {questionTitle}
       </p>
       <div className="row">
         <div className="answer col-sm-12 col-md-6">

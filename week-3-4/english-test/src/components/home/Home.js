@@ -51,7 +51,7 @@ export const Home = () => {
       })
       .then((res) => {
         console.log(res.data);
-        setListHistory(res.data.data);
+        setListHistory(res.data.data.reverse());
       });
 
     axiosInstance
@@ -161,13 +161,13 @@ export const Home = () => {
           <div className="list-lesson row">
             {onePageLesson.map((lesson) => {
               return (
-                <div className="col-6">
                   <Lesson
+                    key={lesson.id}
+                    id={lesson.id}
                     examName={lesson.examName}
                     totalPoint={lesson.totalPoint}
                     totalTime={lesson.totalTime}
                   />
-                </div>
               );
             })}
           </div>
