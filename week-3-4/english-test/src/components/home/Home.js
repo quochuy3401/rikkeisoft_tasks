@@ -1,10 +1,6 @@
-import {
-  faMagnifyingGlass,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
 import "./home.css";
@@ -27,6 +23,7 @@ export const Home = () => {
     pageCount: 0,
     limit: 8,
   });
+  const [activeCategory, setActiveCategory] = useState(0);
 
   useEffect(() => {
     axiosInstance
@@ -36,7 +33,6 @@ export const Home = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setCategories(res.data.data);
       })
       .catch((err) => {
@@ -50,7 +46,6 @@ export const Home = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setListHistory(res.data.data.reverse());
       });
 
@@ -61,7 +56,6 @@ export const Home = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         const data = res.data.data;
         setListLesson(data);
         const _pageCount = Math.ceil(data.length / pagination.limit);
@@ -77,12 +71,6 @@ export const Home = () => {
       });
   }, []);
 
-  const handleLogOut = () => {
-    localStorage.removeItem("userinfo");
-    userCtx.setUser(null);
-    Navigate("/login");
-  };
-
   const getListByCategory = (categoryId) => {
     setLoading(true);
     axiosInstance
@@ -92,7 +80,6 @@ export const Home = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         const data = res.data.data;
         setListLesson(data);
         const _pageCount = Math.ceil(data.length / pagination.limit);
@@ -109,7 +96,6 @@ export const Home = () => {
   };
 
   const handlePageClick = (data) => {
-    console.log(data.selected);
     const currentPage = data.selected + 1;
     const newList = listLesson.slice(
       (currentPage - 1) * pagination.limit,
@@ -123,31 +109,30 @@ export const Home = () => {
       {/* navbar */}
       <div className="info-navbar">
         <div className="container">
-          <div className="align-items-center justify-content-center d-flex">
-            {user.firstName + " " + user.lastName}
-          </div>
-          <button className="btn" type="button" onClick={handleLogOut}>
-            Log out &nbsp;
-            <FontAwesomeIcon icon={faRightFromBracket} />
-          </button>
+          <img src="../../../images/shin-1.jpg" alt="" />
+          <div>{user.lastName + " " + user.firstName}</div>
         </div>
       </div>
       {/* body */}
       <div className="home-body ">
         <div className="left-container">
-          <div className="user-name">
-            {user.firstName + " " + user.lastName}
+          <div className="user-name shadow">
+            {user.lastName + " " + user.firstName}
           </div>
-          {categories.map((category) => {
-            return (
-              <Category
-                key={category.id}
-                id={category.id}
-                categoryName={category.categoryName}
-                handleGetList={getListByCategory}
-              />
-            );
-          })}
+          <div className="shadow">
+            {categories.map((category, index) => {
+              return (
+                <Category
+                  key={category.id}
+                  index={index}
+                  id={category.id}
+                  categoryName={category.categoryName}
+                  handleGetList={getListByCategory}
+                  onActiveCategoryChange={{ activeCategory, setActiveCategory }}
+                />
+              );
+            })}
+          </div>
         </div>
         <div className="center-container 6">
           <div className="row">
@@ -159,8 +144,9 @@ export const Home = () => {
             </form>
           </div>
           <div className="list-lesson row">
-            {onePageLesson.map((lesson) => {
-              return (
+            {onePageLesson.length > 0 ? (
+              onePageLesson.map((lesson) => {
+                return (
                   <Lesson
                     key={lesson.id}
                     id={lesson.id}
@@ -168,8 +154,11 @@ export const Home = () => {
                     totalPoint={lesson.totalPoint}
                     totalTime={lesson.totalTime}
                   />
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="no-record center-item">No lesson</div>
+            )}
           </div>
           <ReactPagination
             breakLabel="..."
@@ -200,7 +189,6 @@ export const Home = () => {
           </div>
         </div>
       </div>
-
       {loading && <LoadingIndicator />}
     </div>
   );

@@ -35,7 +35,6 @@ export const Result = () => {
     },
   ];
   let messageTheme = {};
-  console.log(examCtx.exam);
 
   const handleLogOut = () => {
     localStorage.removeItem("userinfo");
@@ -43,14 +42,14 @@ export const Result = () => {
     navigate("/login");
   };
 
-  const backToHome =()=>{
+  const backToHome = () => {
     navigate("/home");
-  }
+  };
 
   function chooseMassage() {
-    if (exam.scores < 50) {
+    if (exam.scores / exam.totalPoint < 0.5) {
       messageTheme = messages[0];
-    } else if (exam.scores < 80) {
+    } else if (exam.scores / exam.totalPoint < 0.8) {
       messageTheme = messages[1];
     } else {
       messageTheme = messages[2];
@@ -66,11 +65,7 @@ export const Result = () => {
             <div>
               Your id: <span>{user.id}</span>
             </div>
-            <button
-              className="btn"
-              type="button"
-              onClick={handleLogOut}
-            >
+            <button className="btn" type="button" onClick={handleLogOut}>
               Log out &nbsp;
               <FontAwesomeIcon icon={faRightFromBracket} />
             </button>
@@ -89,7 +84,9 @@ export const Result = () => {
             </span>
           </h1>
           <p>{messageTheme.message}</p>
-          <button className="btn btn-primary" onClick={backToHome}>Back to Home</button>
+          <button className="btn btn-primary" onClick={backToHome}>
+            Back to Home
+          </button>
         </div>
       </div>
     </>

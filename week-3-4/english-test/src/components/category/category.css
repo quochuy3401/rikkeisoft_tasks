@@ -1,0 +1,19 @@
+.active {
+    
+    color: #49498e !important;
+}
+
+.select-category {
+    cursor: pointer;
+    height: 50px;
+    font-size: 18px;
+    height: 50px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    color:  #545cea;
+}
+
+.select-category:hover {
+    background: #c7ecee;
+    color: #49498e !important;
+}

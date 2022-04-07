@@ -19,7 +19,7 @@ export const Lesson = (props) => {
           Total time: <span>{totalTime}</span>
         </p>
         <button
-          className="center-item"
+          className="center-item btn-primary"
           onClick={() => {
             handleChooseLesson(id);
           }}

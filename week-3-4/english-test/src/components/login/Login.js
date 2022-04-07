@@ -53,10 +53,8 @@ export const Login = () => {
     }
     setErrors(errs);
     if (errs.password === null && errs.username === null) {
-      console.log("valid");
       return true;
     } else {
-      console.log("invalid");
       return false;
     }
   };
@@ -92,21 +90,18 @@ export const Login = () => {
             console.log(res);
             // store username in localStorage if remember me is checked
             if (isChecked) {
-              console.log(isChecked);
               localStorage.setItem("username", res.data.data.username);
             }
 
             localStorage.setItem("userinfo", JSON.stringify(res.data.data));
             userCtx.setUser(res.data.data); 
-            // JSON.stringify(res.data.data)
             setLoading(false);
-            navigate("/quiz");
+            navigate("/home");
           }
         })
         .catch((err) => {
           // errors
           setLoading(false);
-          console.log(err.response.data);
           if (err.response.status === 400) {
             setModalBody(err.response.data.message)
             setShow(true)

@@ -23,37 +23,23 @@ export const Quiz = () => {
   const navigate = useNavigate();
   const params = useParams();
   const quizId = parseInt(params.id);
+  const _userId = userCtx.user.id.toString();
+  const token = userCtx.user.token;
 
-  const [start, setStart] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
   const [listQuestion, setListQuestion] = useState([]);
   const [listAnswer, setListAnswer] = useState([]);
   const [listAnswerButton, setListAnswerButton] = useState([]);
   const [visible, setVisible] = useState(false);
-  const _userId = userCtx.user.id.toString();
-  const token = userCtx.user.token;
 
-  useEffect(() => {
-    handleStart();
-  }, []);
-
-  //remove userinfo in localStorage and UserContext
-  const handleLogOut = () => {
-    localStorage.removeItem("userinfo");
-    userCtx.setUser(null);
-    navigate("/login");
-  };
-
-  const scrollToQuestion = (id) => {
-    const target = document.getElementById(id).getBoundingClientRect().top - 70; //minus height of navbar
-    window.scrollTo({ top: target, behavior: "smooth" });
-  };
-
+  // states to handle Timer
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [deadline, setDeadline] = useState(Date.now()); // 
 
   //get game
-  const handleStart = () => {
-    setLoading(true);
+  useEffect(() => {
     axiosInstance
       .post(
         "/games/getGame",
@@ -74,9 +60,15 @@ export const Quiz = () => {
           totalTime: res.data.totalTime,
           quantity: data.length,
         });
-        setStart(true);
-        console.log(data);
         setListQuestion(data);
+
+        // initial minutes of Timer
+        setMinutes(res.data.totalTime);
+
+        // calculate deadline = now + totalTime
+        setDeadline(
+          new Date(new Date().getTime() + res.data.totalTime * 60000)
+        );
         const newArr = [];
         for (let i = 0; i < data.length; i++) {
           newArr.push({ id: data[i].id, isAnswered: false });
@@ -89,13 +81,30 @@ export const Quiz = () => {
       .finally(() => {
         setLoading(false);
       });
+  }, []);
+
+  //remove userinfo in localStorage and UserContext
+  const handleLogOut = () => {
+    localStorage.removeItem("userinfo");
+    userCtx.setUser(null);
+    navigate("/login");
+  };
+
+  const scrollToQuestion = (id) => {
+    const target = document.getElementById(id).getBoundingClientRect().top - 70; //minus height of navbar
+    window.scrollTo({ top: target, behavior: "smooth" });
+  };
+
+  // calculate totalTime to do the exam (by second)
+  const calculateTotalTime = () => {
+    return (examCtx.exam.totalTime - minutes - 1) * 60 + (60 - seconds);
   };
 
   const handleFinish = () => {
-    console.log(listAnswer);
+    // console.log(listAnswer);
     setShow(false);
     setLoading(true);
-    console.log(listAnswerButton);
+    // console.log(listAnswerButton);
     axiosInstance
       .post(
         "/games/finishGame",
@@ -103,7 +112,7 @@ export const Quiz = () => {
           examId: quizId,
           userId: _userId,
           listAnswer: listAnswer,
-          totalTime: examCtx.exam.totalTime,
+          totalTime: calculateTotalTime(), //  by second
         },
         {
           headers: {
@@ -112,9 +121,7 @@ export const Quiz = () => {
         }
       )
       .then((res) => {
-        console.log(res);
         examCtx.setExam({ ...examCtx.exam, scores: res.data.scores });
-        // setLoading(false);
         navigate("/result");
       })
       .catch((err) => {
@@ -159,10 +166,11 @@ export const Quiz = () => {
       <div className="container quiz-wrapper">
         <div className="row">
           <div className="left-side col-md-12 col-lg-3">
-            {start && (
+            {listAnswerButton.length > 0 && (
               <div className="exam-manager">
                 <Timer
-                  initialMinutes={examCtx.exam.totalTime}
+                  deadline={deadline}
+                  timerParams={{ minutes, setMinutes, seconds, setSeconds }}
                   handleTimeOut={handleFinish}
                 />
                 <div>

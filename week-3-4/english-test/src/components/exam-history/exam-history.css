@@ -1,32 +1,41 @@
-p span, .exam-name {
+p span,
+.exam-name {
   font-weight: bold;
 }
+
 p {
   font-size: 14px;
   margin: 0;
 }
-.exam-name{
-    font-size: 16px;
+
+.exam-name {
+  font-size: 16px;
 }
-.history-wrapper{
+
+.history-wrapper {
   border: 1px solid grey;
   padding: 10px;
   border-radius: 5px;
-  margin-top: 10px;
+  margin-bottom: 10px;
+  background: #fff;
 }
-.result-wrapper{
+
+.result-wrapper {
   display: flex;
 }
+
 /* .result-wrapper p{
   flex-grow: 1;
 } */
-.result-wrapper p:first-child{
-  flex-grow:2;
+.result-wrapper p:first-child {
+  flex-grow: 2;
 }
-.result-wrapper p:nth-child(2){
+
+.result-wrapper p:nth-child(2) {
   margin: 0px 10px;
   flex-grow: 8;
 }
-.result-wrapper p:last-child{
-  flex-grow:2
+
+.result-wrapper p:last-child {
+  flex-grow: 2
 }

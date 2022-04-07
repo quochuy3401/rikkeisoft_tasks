@@ -1,11 +1,20 @@
-import "../home/home.css"
+import "../category/category.css";
 export const Category = (props) => {
-const {id, categoryName, handleGetList}= props;
+  const { id, index, categoryName, handleGetList, onActiveCategoryChange } =
+    props;
+  const { activeCategory, setActiveCategory } = onActiveCategoryChange;
+  const handleClick = () => {
+    setActiveCategory(index);
+    handleGetList(id);
+  };
   return (
     <div
-      className="select-category center-item"
+      className={
+        (index === activeCategory ? "active " : "") +
+        "select-category center-item"
+      }
       onClick={() => {
-        handleGetList(id);
+        handleClick();
       }}
     >
       {categoryName}

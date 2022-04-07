@@ -8,10 +8,7 @@
 }
 
 body {
-  /* background-image: url("../public/images/bg-1.jpg");
-background-repeat: no-repeat;
-background-size: cover; */
-  /* background: #010409; */
+  background: #f9f9f9;
 }
 
 button {
@@ -54,10 +51,25 @@ button {
   margin: 20px 0px;
 }
 
-
-
 .center-item {
   display: flex;
   justify-content: center;
   text-align: center;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c7ecee;
+  border-radius: 100rem;
+
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7ed6df;
+}
+
+.shadow{
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }

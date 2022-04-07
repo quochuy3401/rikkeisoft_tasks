@@ -14,7 +14,7 @@ export const Question = (props) => {
 
   const isExistedId = (arr, id) => {
     return arr.findIndex((arr) => {
-      return arr.id == id;
+      return arr.id === id;
     });
   };
 
