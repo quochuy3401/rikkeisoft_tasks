@@ -20,90 +20,89 @@
 .center-container,
 .right-container {
   max-height: 100vh;
-  padding: 60px 10px 30px 10px;
+  padding: 90px 10px 20px 10px;
 }
 
 .left-container,
 .right-container {
-  /* flex-grow: 1; */
   width: 25vw;
   padding-left: 10px;
   padding-right: 10px;
+  min-height: 100vh;
 }
 
 .center-container {
-  /* flex-grow: 6; */
   width: 50vw;
-  /* border-left: 1px solid grey;
-  border-right: 1px solid grey; */
   display: flex;
   flex-direction: column;
 }
 
 .left-container .user-name {
-  /* width: 100%; */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 40px;
-  font-size: 24px;
-  
-  margin: 40px 0px 30px 00px;
-}
-
-.left-container > div{
-  border-radius: 10px;
-  background: #fff;
-}
-
-.right-container {
-  /* display:flex;
-  flex-direction: column; */
-}
-
-
-.right-container>div:first-child {
-  margin-bottom: 10px
+  font-size: 20px;
+  margin: 0px 0px 30px 0px;
 }
 
 .right-container .list-history {
   overflow-y: scroll;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   overflow-x: hidden;
+  max-height: 450px;
+}
 
+.right-container .list-history>div:last-child {
+  margin-bottom: 0;
 }
 
 .right-container>div:first-child {
-  height: 70px;
+  height: 40px;
   font-size: 18px;
-  border-bottom: 1px solid grey;
+  margin-bottom: 30px;
 }
 
 .list-history {
-
-  height: calc(100vh - 160px)
+  height: calc(100vh - 160px);
+  scroll-snap-type: y mandatory;
 }
 
 .search {
   display: flex;
-  margin-top: 40px;
   margin-bottom: 30px;
+  height: 40px;
+  align-items: center;
+}
+
+.search>div {
+  position: relative;
+  width: 100%;
+  padding: 5px
 }
 
 .search input {
   flex-grow: 1;
   height: 35px;
+  width: 35px;
+
   font-size: 14px;
-  padding: 0px 10px;
-  border: 1px solid grey;
+  padding: 0px 40px 0px 10px;
+  border: none;
+  background: #f0f2f5;
+  width: 100%;
+  border-radius: 10px;
 }
 
 .search button {
   width: 35px;
   height: 35px;
-  border: 1px solid grey;
-  background: #fff;
   color: grey;
+  background: none;
+  border: none;
+  position: absolute;
+  right: 0;
+  margin-right: 10px;
 }
 
 .pagination {
@@ -121,4 +120,3 @@
 .no-record {
   color: grey;
 }
-

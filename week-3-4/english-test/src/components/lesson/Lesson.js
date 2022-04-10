@@ -10,7 +10,7 @@ export const Lesson = (props) => {
 
   return (
     <div className="col-6">
-      <div className="lesson-wrapper">
+      <div className="lesson-wrapper shadow-fb">
         <div className="exam-name">{examName}</div>
         <p>
           Total point: <span>{totalPoint}</span>

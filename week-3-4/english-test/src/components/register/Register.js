@@ -3,10 +3,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./register.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEye,
-  faEyeSlash
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "../../util/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
@@ -209,7 +206,9 @@ export const Register = () => {
 
                 {errors.password && <span>{errors.password}</span>}
               </div>
-              <button className="btn-success" type="submit">Register</button>
+              <button className="btn-success" type="submit">
+                Register
+              </button>
               <p className="navigate">
                 Already have an account?{" "}
                 <span onClick={handleNavigate}>Sign in</span>
@@ -230,9 +229,7 @@ export const Register = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      {loading ? (
-        <LoadingIndicator size="2x"/>
-      ) : null}
+      {loading ? <LoadingIndicator size="2x" /> : null}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import "../category/category.css";
 export const Category = (props) => {
+  // index is position of element in array data
   const { id, index, categoryName, handleGetList, onActiveCategoryChange } =
     props;
   const { activeCategory, setActiveCategory } = onActiveCategoryChange;

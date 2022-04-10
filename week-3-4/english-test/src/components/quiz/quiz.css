@@ -1,13 +1,8 @@
-/* *{
-    background-color: none;
-    color: black
-} */
-
 .quiz-page {
   min-height: 100vh;
   position: relative;
   align-items: center;
-  background: black;
+  background: #f0f2f5;
   font-family: "Courgette", cursive;
 }
 

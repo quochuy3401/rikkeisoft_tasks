@@ -2,7 +2,7 @@ import React from "react";
 import "./question.css";
 
 export const Question = (props) => {
-  const { index } = props;
+  const { index } = props; // position of element in listQuestion
   const { id, questionTitle, questionContent } = props.question;
   const listAnswer = props.handleChange[0];
   const setListAnswer = props.handleChange[1];

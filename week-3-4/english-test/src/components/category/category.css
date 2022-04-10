@@ -1,6 +1,5 @@
 .active {
-    
-    color: #49498e !important;
+    font-weight: bold;
 }
 
 .select-category {
@@ -10,10 +9,9 @@
     height: 50px;
     margin-bottom: 5px;
     border-radius: 10px;
-    color:  #545cea;
 }
 
 .select-category:hover {
-    background: #c7ecee;
+    background: #f0f2f5;
     color: #49498e !important;
 }

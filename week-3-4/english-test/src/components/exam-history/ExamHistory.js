@@ -9,7 +9,7 @@ export const ExamHistory = (props) => {
   const seconds = totalTime % 60;
 
   return (
-    <div className="history-wrapper">
+    <div className="history-wrapper shadow-fb">
       <div className="exam-name">{examName}</div>
       <div className="result-wrapper">
         <p className="">

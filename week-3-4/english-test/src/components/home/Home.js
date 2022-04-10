@@ -20,12 +20,14 @@ export const Home = () => {
   const [listLesson, setListLesson] = useState([]);
   const [onePageLesson, setOnePageLesson] = useState([]);
   const [pagination, setPagination] = useState({
-    pageCount: 0,
-    limit: 8,
+    pageCount: 0, // total number of pages
+    limit: 8, //number of lessons in a page
   });
-  const [activeCategory, setActiveCategory] = useState(0);
+  // store index (position) of active category
+  const [activeCategory, setActiveCategory] = useState(0); 
 
   useEffect(() => {
+    setLoading(true);
     axiosInstance
       .get("/categories", {
         headers: {
@@ -96,7 +98,9 @@ export const Home = () => {
   };
 
   const handlePageClick = (data) => {
+    // data.selected return index (position) of selected page number
     const currentPage = data.selected + 1;
+    // get list to display in one page
     const newList = listLesson.slice(
       (currentPage - 1) * pagination.limit,
       currentPage * pagination.limit
@@ -116,10 +120,10 @@ export const Home = () => {
       {/* body */}
       <div className="home-body ">
         <div className="left-container">
-          <div className="user-name shadow">
+          <div className="user-name shadow-fb box">
             {user.lastName + " " + user.firstName}
           </div>
-          <div className="shadow">
+          <div className="box shadow-fb">
             {categories.map((category, index) => {
               return (
                 <Category
@@ -134,14 +138,19 @@ export const Home = () => {
             })}
           </div>
         </div>
+
         <div className="center-container 6">
           <div className="row">
-            <form className="col-6 search">
-              <input type="text" placeholder="Search" />
-              <button>
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </button>
-            </form>
+            <div className="col-6">
+              <form className="search box shadow-fb">
+                <div>
+                  <input type="text" placeholder="Search..." />
+                  <button>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
           <div className="list-lesson row">
             {onePageLesson.length > 0 ? (
@@ -174,14 +183,16 @@ export const Home = () => {
             pageLinkClassName={"page-link"}
             previousClassName={"page-item"}
             previousLinkClassName={"page-link"}
-            nextClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
             breakClassName={"page-item"}
             breakLinkClassName={"page-link"}
             activeClassName={"active"}
           />
         </div>
+
         <div className="right-container ">
-          <div className="center-item">History</div>
+          <div className="center-item box shadow-fb">History</div>
           <div className="list-history">
             {listHistory.map((history) => {
               return <ExamHistory key={history.id} history={history} />;
@@ -189,7 +200,7 @@ export const Home = () => {
           </div>
         </div>
       </div>
-      {loading && <LoadingIndicator />}
+      {loading && <LoadingIndicator size="2x" />}
     </div>
   );
 };

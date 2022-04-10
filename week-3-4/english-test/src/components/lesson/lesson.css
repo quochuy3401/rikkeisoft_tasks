@@ -1,7 +1,7 @@
 .lesson-wrapper {
     height: 110px;
     padding: 10px;
-    border: 1px solid grey;
+    
     border-radius: 10px;
     position: relative;
     overflow: hidden;
@@ -35,7 +35,7 @@
 
 }
 .lesson-wrapper:hover {
-    border: 1px solid black;
+   
     box-shadow: 0 3px 3px 0 rgb(0 0 0 / 5%), 0 5px 15px 0 rgb(0 0 0 / 5%);
 }
 

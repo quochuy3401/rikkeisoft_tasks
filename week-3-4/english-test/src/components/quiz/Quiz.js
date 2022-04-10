@@ -263,11 +263,11 @@ export const Quiz = () => {
       )}
 
       {/* scroll to top button  */}
-      {visible && (
+      {visible ? (
         <div id="scrollToTop" onClick={scrollToTop}>
           <FontAwesomeIcon icon={faArrowUpLong} />
         </div>
-      )}
+      ): null}
     </div>
   );
 };

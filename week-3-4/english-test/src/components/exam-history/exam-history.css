@@ -13,20 +13,17 @@ p {
 }
 
 .history-wrapper {
-  border: 1px solid grey;
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
   background: #fff;
+  scroll-snap-align: start;
 }
 
 .result-wrapper {
   display: flex;
 }
 
-/* .result-wrapper p{
-  flex-grow: 1;
-} */
 .result-wrapper p:first-child {
   flex-grow: 2;
 }
@@ -38,4 +35,14 @@ p {
 
 .result-wrapper p:last-child {
   flex-grow: 2
+}
+
+@media  (max-width: 991.8px) {
+  .result-wrapper {
+    flex-direction: column;
+  }
+
+  .result-wrapper p:nth-child(2) {
+    margin: 0px;
+  }
 }

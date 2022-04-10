@@ -60,6 +60,7 @@ export const Result = () => {
   return (
     <>
       <div className="quiz-page">
+        {/* navbar */}
         <div className="info-navbar">
           <div className="container">
             <div>
@@ -71,6 +72,7 @@ export const Result = () => {
             </button>
           </div>
         </div>
+        {/* content */}
         <div className="container quiz-wrapper d-flex justify-content-center align-items-center flex-column">
           <FontAwesomeIcon
             icon={messageTheme.icon}
@@ -84,9 +86,12 @@ export const Result = () => {
             </span>
           </h1>
           <p>{messageTheme.message}</p>
-          <button className="btn btn-primary" onClick={backToHome}>
+          <div
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={backToHome}
+          >
             Back to Home
-          </button>
+          </div>
         </div>
       </div>
     </>
