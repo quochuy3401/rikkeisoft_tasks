@@ -32,7 +32,7 @@ export const Login = () => {
     const _username = localStorage.getItem("username");
 
     if (_username) {
-      setValues({ ...values, username: _username });
+      setValues(prev => ({ ...prev, username: _username }));
     }
   }, []);
 

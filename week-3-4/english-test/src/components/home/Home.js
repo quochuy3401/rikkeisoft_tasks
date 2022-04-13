@@ -1,4 +1,7 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/user";
@@ -9,8 +12,10 @@ import { LoadingIndicator } from "../../share/LoadingIndicator";
 import { Category } from "../category/Category";
 import { Lesson } from "../lesson/Lesson";
 import ReactPagination from "react-paginate";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
+  const navigate = useNavigate();
   const userCtx = useContext(UserContext);
   const { user } = userCtx;
   const { token, id } = user;
@@ -24,7 +29,7 @@ export const Home = () => {
     limit: 8, //number of lessons in a page
   });
   // store index (position) of active category
-  const [activeCategory, setActiveCategory] = useState(0); 
+  const [activeCategory, setActiveCategory] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -61,7 +66,7 @@ export const Home = () => {
         const data = res.data.data;
         setListLesson(data);
         const _pageCount = Math.ceil(data.length / pagination.limit);
-        setPagination({ ...pagination, pageCount: _pageCount });
+        setPagination((prevState) => ({ ...prevState, pageCount: _pageCount }));
         const newList = data.slice(0, pagination.limit);
         setOnePageLesson(newList);
       })
@@ -71,7 +76,7 @@ export const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [id, token, pagination.limit]);
 
   const getListByCategory = (categoryId) => {
     setLoading(true);
@@ -108,6 +113,12 @@ export const Home = () => {
     setOnePageLesson(newList);
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("userinfo");
+    userCtx.setUser(null);
+    navigate("/login");
+  };
+
   return (
     <div className="home-page">
       {/* navbar */}
@@ -115,6 +126,10 @@ export const Home = () => {
         <div className="container">
           <img src="../../../images/shin-1.jpg" alt="" />
           <div>{user.lastName + " " + user.firstName}</div>
+          <button className="btn" type="button" onClick={handleLogOut}>
+            Log out &nbsp;
+            <FontAwesomeIcon icon={faRightFromBracket} />
+          </button>
         </div>
       </div>
       {/* body */}

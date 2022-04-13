@@ -57,7 +57,7 @@ export const Register = () => {
     if (!data.email.trim()) {
       errs.email = "*Required";
     } else if (
-      !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
+      !/^\S+@\S+\.\S+$/.test(
         data.email
       )
     ) {
@@ -145,7 +145,7 @@ export const Register = () => {
         <div className="row register-content justify-content-center">
           <div></div>
           <div className="register-img col-xl-6 ">
-            <img src="../../../images/login-3.gif" alt="image" />
+            <img src="../../../images/login-3.gif" alt="login-img" />
           </div>
           <div className="register-form col-xl-6  col-lg-6 ">
             <h2>Sign up</h2>

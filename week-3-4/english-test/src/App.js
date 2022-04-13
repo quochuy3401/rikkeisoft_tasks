@@ -15,11 +15,10 @@ function App() {
   const [exam, setExam] = useState(null);
   const [signingIn, setSigningIn] = useState(true);
   const navigate = useNavigate();
+
   useEffect(() => {
     const userinfo = localStorage.getItem("userinfo");
-    // console.log(userinfo);
     if (!userinfo) {
-      //fix cho nay
       setSigningIn(false);
       navigate("/login");
     } else {
@@ -27,7 +26,9 @@ function App() {
       setUser(JSON.parse(userinfo));
       navigate("/home");
     }
+    // eslint-disable-next-line 
   }, []);
+
   return (
     <div className="App">
       <UserContext.Provider value={{ user, setUser }}>
@@ -43,10 +44,6 @@ function App() {
               </Routes>
             </>
           )}
-          {/* <Routes>
-
-           <Route path="/result" element={<Result />} />
-          </Routes> */}
         </ExamContext.Provider>
       </UserContext.Provider>
     </div>

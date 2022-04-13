@@ -1,10 +1,10 @@
 import {
   faArrowUpLong,
   faCircleExclamation,
-  faRightFromBracket,
+  faHouseUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../../context/user";
 import axiosInstance from "../../util/axiosInstance";
@@ -23,6 +23,7 @@ export const Quiz = () => {
   const navigate = useNavigate();
   const params = useParams();
   const quizId = parseInt(params.id);
+  const { setExam } = examCtx;
   const _userId = userCtx.user.id.toString();
   const token = userCtx.user.token;
 
@@ -36,10 +37,9 @@ export const Quiz = () => {
   // states to handle Timer
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-  const [deadline, setDeadline] = useState(Date.now()); // 
+  const [deadline, setDeadline] = useState(Date.now()); //
 
-  //get game
-  useEffect(() => {
+  const getInitialData = useCallback(() => {
     axiosInstance
       .post(
         "/games/getGame",
@@ -55,7 +55,7 @@ export const Quiz = () => {
       )
       .then((res) => {
         const data = res.data.data;
-        examCtx.setExam({
+        setExam({
           totalPoint: res.data.totalPoint,
           totalTime: res.data.totalTime,
           quantity: data.length,
@@ -81,13 +81,15 @@ export const Quiz = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [_userId, quizId, setExam, token]);
 
-  //remove userinfo in localStorage and UserContext
-  const handleLogOut = () => {
-    localStorage.removeItem("userinfo");
-    userCtx.setUser(null);
-    navigate("/login");
+  //get game
+  useEffect(() => {
+    getInitialData();
+  }, [getInitialData]);
+
+  const handleBackHome = () => {
+    navigate("/home");
   };
 
   const scrollToQuestion = (id) => {
@@ -121,7 +123,7 @@ export const Quiz = () => {
         }
       )
       .then((res) => {
-        examCtx.setExam({ ...examCtx.exam, scores: res.data.scores });
+        setExam({ ...examCtx.exam, scores: res.data.scores });
         navigate("/result");
       })
       .catch((err) => {
@@ -154,11 +156,11 @@ export const Quiz = () => {
       <div className="info-navbar">
         <div className="container">
           <div className="align-items-center justify-content-center d-flex">
-            Your id: <span>{userCtx.user.id}</span>
+            {userCtx.user.lastName + " " + userCtx.user.firstName}
           </div>
-          <button className="btn" type="button" onClick={handleLogOut}>
-            Log out &nbsp;
-            <FontAwesomeIcon icon={faRightFromBracket} />
+          <button className="btn" type="button" onClick={handleBackHome}>
+            Back &nbsp;
+            <FontAwesomeIcon icon={faHouseUser} />
           </button>
         </div>
       </div>
@@ -267,7 +269,7 @@ export const Quiz = () => {
         <div id="scrollToTop" onClick={scrollToTop}>
           <FontAwesomeIcon icon={faArrowUpLong} />
         </div>
-      ): null}
+      ) : null}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import {
   faFaceFrown,
-  faRightFromBracket,
   faFaceSmile,
   faHandsClapping,
+  faHouseUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
@@ -36,13 +36,7 @@ export const Result = () => {
   ];
   let messageTheme = {};
 
-  const handleLogOut = () => {
-    localStorage.removeItem("userinfo");
-    userCtx.setUser(null);
-    navigate("/login");
-  };
-
-  const backToHome = () => {
+  const handleBackHome = () => {
     navigate("/home");
   };
 
@@ -63,12 +57,10 @@ export const Result = () => {
         {/* navbar */}
         <div className="info-navbar">
           <div className="container">
-            <div>
-              Your id: <span>{user.id}</span>
-            </div>
-            <button className="btn" type="button" onClick={handleLogOut}>
-              Log out &nbsp;
-              <FontAwesomeIcon icon={faRightFromBracket} />
+            <div>{user.lastName + " " + user.firstName}</div>
+            <button className="btn" type="button" onClick={handleBackHome}>
+              Back &nbsp;
+              <FontAwesomeIcon icon={faHouseUser} />
             </button>
           </div>
         </div>
@@ -86,12 +78,6 @@ export const Result = () => {
             </span>
           </h1>
           <p>{messageTheme.message}</p>
-          <div
-            style={{ cursor: "pointer", textDecoration: "underline" }}
-            onClick={backToHome}
-          >
-            Back to Home
-          </div>
         </div>
       </div>
     </>
